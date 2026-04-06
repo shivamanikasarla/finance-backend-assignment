@@ -1,63 +1,65 @@
-# Finance Data Processing & Access Control Backend
+# Finance Data Processing & Access Control Backend (Spring Boot)
 
 ## Overview
-This is a backend system designed for a finance dashboard where users interact with financial records based on predefined roles: **Admin**, **Analyst**, and **Viewer**. 
-
-The system provides robust Role-Based Access Control (RBAC), financial logic, and aggregated dashboard APIs.
+This is a robust backend system for a finance dashboard, migrated from Node.js to **Spring Boot** to leverage Java's strong typing and enterprise-ready ecosystem. The system handles financial records with Role-Based Access Control (RBAC) for **Admin**, **Analyst**, and **Viewer** roles.
 
 ## Tech Stack
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **ORM**: Sequelize (v6)
-- **Database**: SQLite (In-Memory/File persistent for easy portability)
-- **Authentication**: JWT (JSON Web Tokens)
-- **Security**: Bcrypt.js for password hashing
+- **Framework**: Spring Boot 3.2.4
+- **Language**: Java 17
+- **Database**: H2 (In-memory/Local for easy evaluation)
+- **Security**: Spring Security 6 (JWT-based)
+- **ORM**: Spring Data JPA (Hibernate)
+- **API Documentation**: [Swagger UI (Interactive API Docs)](http://localhost:8080/swagger-ui/index.html)
 
 ---
 
 ## Project Structure
 ```bash
-src/
-├── controllers/    # Business logic for Auth, Transactions, and Dashboard
-├── db/             # Database connection configuration
-├── middleware/     # Auth (JWT) and Role-Based Access Control (RBAC)
-├── models/         # Sequelize data models (User, Transaction)
-├── routes/         # Express API route definitions
-├── app.js          # Express app configuration
-└── server.js       # Entry point for the server
+src/main/java/com/finance/backend/
+├── controller/     # REST Controllers (Auth, Transaction, Dashboard)
+├── model/          # JPA Entities (User, Transaction, Role)
+├── repository/     # Spring Data Repositories
+├── security/       # JWT Logic, Filters, and Security Configuration
+├── service/        # Business Logic Services
+├── DataInitializer.java # Auto-seeds test data on startup
+└── FinanceApplication.java # Main Application Entry
 ```
 
 ---
 
 ## Getting Started
 
-### 1. Installation
-Clone the project and install the dependencies:
-```bash
-npm install
-```
+### 1. Prerequisites
+- **Java 17** or higher
+- **Maven** (optional, you can use the included wrapper)
 
-### 2. Initial Setup (Seeding Data)
-I have included a seed script to help generate test users and sample transactions immediately.
+### 2. Build and Run
+Clone the project and run the following command:
 ```bash
-# This will create Admin, Analyst, and Viewer accounts + 6 sample transactions
-npm run seed
+./mvnw spring-boot:run
 ```
+The server will start at `http://localhost:8080`.
 
-### 3. Run the Server
-```bash
-npm run dev
-```
-The server will start at `http://localhost:5000`.
+### 3. Test Accounts
+The system automatically seeds the following users on startup:
+*   **Admin**: `admin` / `admin123`
+*   **Analyst**: `analyst` / `analyst123`
+*   **Viewer**: `viewer` / `viewer123`
+
+### 4. H2 Console
+Explore the database at `http://localhost:8080/h2-console`
+- JDBC URL: `jdbc:h2:mem:financedb`
+- User: `sa`
+- Password: `password`
 
 ---
 
 ## Roles and Permissions
 
-| Role | Dashboard Summary | View Records | Create/Edit/Delete Records | Manage Users |
+| Role | Dashboard Summary | View Records | Create/Edit Records | Delete Records |
 | :--- | :---: | :---: | :---: | :---: |
-| **Viewer** | ✅ | ❌ | ❌ | ❌ |
-| **Analyst** | ✅ | ✅ | ❌ | ❌ |
+| **Viewer** | ✅ | ✅ | ❌ | ❌ |
+| **Analyst** | ✅ | ✅ | ✅ | ❌ |
 | **Admin** | ✅ | ✅ | ✅ | ✅ |
 
 ---
@@ -65,28 +67,28 @@ The server will start at `http://localhost:5000`.
 ## API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Create a new user (Default: VIEWER)
-- `POST /api/auth/login` - Authenticate and get a JWT token
+- `POST /api/auth/register` - Register a new account
+- `POST /api/auth/login` - Authenticate and receive a JWT
 
-### Financial Records
-- `GET /api/transactions` - Filterable list of all transactions (**Analyst+, Admin**)
+### Financial records
+- `GET /api/transactions` - Filtered list of transactions (**All Roles**)
   - Query Params: `category`, `type` (INCOME/EXPENSE), `startDate`, `endDate`
-- `POST /api/transactions` - Add new record (**Admin only**)
-- `PUT /api/transactions/:id` - Update existing record (**Admin only**)
-- `DELETE /api/transactions/:id` - Remove record (**Admin only**)
+- `POST /api/transactions` - Add new record (**Analyst, Admin**)
+- `PUT /api/transactions/{id}` - Update existing record (**Analyst, Admin**)
+- `DELETE /api/transactions/{id}` - Remove record (**Admin Only**)
 
 ### Dashboard
-- `GET /api/dashboard/summary` - Aggregated stats like Net Balance, Income vs Expense, and Category breakdown (**All Roles**)
+- `GET /api/dashboard/summary` - Aggregated stats: Net Balance, Income vs Expense, and Category breakdown (**All Roles**)
 
 ---
 
-## Core Logic & Assumptions
-1. **Simplified Storage**: Used SQLite as specified in the assignment for ease of "zero-setup" evaluation. Data is stored in `database.sqlite` in the root.
-2. **Access Control**: Implemented as middleware using JWT payloads. Permissions are strictly enforced at the route level.
-3. **Data Integrity**: Financial amounts are validated to ensure they are positive, and types are restricted to `INCOME` or `EXPENSE`.
-4. **Human Transparency**: Code uses modern ESM syntax, clear separation of concerns, and focuses on maintainability rather than over-engineered complexity.
+## Core Logic & Implementation Notes
+1. **Security**: Implemented a stateless JWT filter. Roles are automatically mapped to `GrantedAuthority`.
+2. **Dynamic Filtering**: Used a custom JPQL query in the repository for efficient multi-param filtering of financial data.
+3. **Data Integrity**: Used JPA annotations for validation and unique constraints on usernames.
+4. **Analytics**: Real-time aggregation using Java Streams in the Dashboard controller.
 
 ---
 
-**Designed for Zorvyn FinTech Pvt. Ltd. Assignment**  
-*Submitted by: Backend Developer Intern Candidate*
+**Designed for Backend Engineering Assignment**  
+*Submitted by: Java Backend Developer Candidate*

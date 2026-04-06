@@ -1,8 +1,23 @@
+# Java/Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDEs
+.settings/
+.project
+.classpath
+.factorypath
+.idea/
+*.iml
+.vscode/
+.nb-gradle/
+
+# Others
 node_modules/
+bin/
 .env
 database.sqlite
-*.log
-.DS_Store
-dist/
-build/
-coverage/

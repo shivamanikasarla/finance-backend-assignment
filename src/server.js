@@ -8,15 +8,15 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    // Connect to Database
+  
     await sequelize.authenticate();
     console.log('Connected to SQLite database successfully');
 
-    // Sync models
-    await sequelize.sync({ force: false }); // Do not clear DB on restart
+  
+    await sequelize.sync({ force: false }); 
     console.log('Database synced');
 
-    // Start Server
+    
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
       console.log(`- API Base: http://localhost:${PORT}/api`);
