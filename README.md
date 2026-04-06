@@ -1,7 +1,7 @@
 # Finance Data Processing & Access Control Backend (Spring Boot)
 
 ## Overview
-This is a robust backend system for a finance dashboard, migrated from Node.js to **Spring Boot** to leverage Java's strong typing and enterprise-ready ecosystem. The system handles financial records with Role-Based Access Control (RBAC) for **Admin**, **Analyst**, and **Viewer** roles.
+This is a robust backend system for a finance dashboard, built with **Spring Boot** to leverage Java's strong typing and enterprise-ready ecosystem. The system handles financial records with Role-Based Access Control (RBAC) for **Admin**, **Analyst**, and **Viewer** roles.
 
 ## Tech Stack
 - **Framework**: Spring Boot 3.2.4

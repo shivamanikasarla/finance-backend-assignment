@@ -1,1 +1,1 @@
-console.log('Hello from node');
+// Redundant file - scheduled for deletion
